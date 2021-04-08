@@ -12,6 +12,9 @@
         <property name="hibernate.connection.url">jdbc:mysql://localhost/server</property>
 
         <mapping class="database.User"/>
+        <mapping class="database.Alcohol"/>
+        <mapping class="database.AlcoholTypes"/>
+        <mapping class="database.Marks"/>
 
     </session-factory>
 </hibernate-configuration>

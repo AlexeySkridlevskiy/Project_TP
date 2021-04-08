@@ -3,8 +3,10 @@ package database;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
+import org.intellij.lang.annotations.Language;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,20 +14,42 @@ import java.util.List;
 
 public class HibernateRequest {
 
-    private static final Session session = HibernateUtil.getSessionFactory().openSession();
+    SessionFactory sessionFactory;
 
-    public static List<User> getAllTable() throws SQLException {
-        List<User> users = new ArrayList<>();
+    public HibernateRequest() {
+        sessionFactory = HibernateUtil.getSessionFactory();
+    }
 
-        try {
-            Query<User> query = session.createQuery("from database.User group by ID", User.class);
-            users = query.list();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private List select(@Language("HQL") String queryString) {
+        Session session = sessionFactory.openSession();
+        Transaction tr = session.beginTransaction();
+        Query query = session.createQuery(queryString);
+        List result = query.getResultList();
+        tr.commit();
+        return result;
+    }
 
-        HibernateUtil.shutdown();
-        return users;
+    public List<User> getAllTableUser() {
+        List<User> result = select("from User where ID = 1");
+        return result;
+    }
+
+    public List<Alcohol> getNameAlcoByType(String typeID)
+    {
+        List<Alcohol> result = select("from Alcohol where TypeID = "+typeID+"");
+        return result;
+    }
+
+    public List<AlcoholTypes> getAllTypesAlco()
+    {
+        List<AlcoholTypes> result = select("from AlcoholTypes");
+        return result;
+    }
+
+    public List<Marks> getMarks()
+    {
+        List<Marks> result = select("from Marks where UserID = 1");
+        return result;
     }
 
 //    public static List<Alcohol> getNameAlcoByType() throws SQLException {
@@ -46,22 +70,19 @@ public class HibernateRequest {
 
 
 class HibernateUtil {
-    private static final SessionFactory sessionFactory = buildSessionFactory();
+    private static SessionFactory sessionFactory;
 
     private static SessionFactory buildSessionFactory() {
-        try {
-            return new Configuration().configure().buildSessionFactory();
-        } catch (Throwable ex) {
-            System.err.println("SessionFactory creation failed." + ex);
-            throw new ExceptionInInitializerError(ex);
-        }
-    }
-
-    public static SessionFactory getSessionFactory() {
+        Configuration configuration = new Configuration();
+        configuration.configure(); //"hibernate.cfg.xml"
+        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().configure();
+        sessionFactory = configuration.buildSessionFactory(builder.build());
         return sessionFactory;
     }
 
-    public static void shutdown() {
-        getSessionFactory().close();
+    public static SessionFactory getSessionFactory() {
+        if (sessionFactory == null)
+            sessionFactory = buildSessionFactory();
+        return sessionFactory;
     }
 }

@@ -25,7 +25,7 @@ public class Marks {
     @Getter
     @Setter
     @Column(name = "UserID", length = 20, nullable = false)
-    private String UserID;
+    private Long UserID;
 
     @Getter
     @Setter

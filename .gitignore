@@ -12,6 +12,8 @@
 .idea/**/dictionaries
 .idea/**/shelf
 .idea
+database.iml
+spring_server.iml
 Alco_Server.iml
 target
 # Generated files
