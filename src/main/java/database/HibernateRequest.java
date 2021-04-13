@@ -8,8 +8,6 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.intellij.lang.annotations.Language;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HibernateRequest {
@@ -29,45 +27,53 @@ public class HibernateRequest {
         return result;
     }
 
-    public List<User> getAllTableUser() {
-        List<User> result = select("from User where ID = 1");
+    public User getUserByID(long UserID) {
+        List<User> result = select("from User where ID = '"+UserID+"'");
+        return result.isEmpty() ? null : result.get(0);
+    }
+
+    public Alcohol getAlcoholByID(long AlcoholID) {
+        List<Alcohol> result = select("from Alcohol where ID = '"+AlcoholID+"'");
+        return result.isEmpty() ? null : result.get(0);
+    }
+
+    public List<Alcohol> getNameAlcoholByType(long typeID) {
+        List<Alcohol> result = select("from Alcohol where TypeID = '" + typeID + "'");
         return result;
     }
 
-    public List<Alcohol> getNameAlcoByType(String typeID)
+    public List<Alcohol> getSearchAlcoholByName(String nameAlcohol)
     {
-        List<Alcohol> result = select("from Alcohol where TypeID = "+typeID+"");
+        List<Alcohol> result = select("from Alcohol where Name LIKE '%"+nameAlcohol+"%'");
         return result;
     }
 
-    public List<AlcoholTypes> getAllTypesAlco()
+    public List<AlcoholTypes> getAllAlcoholTypes()
     {
-        List<AlcoholTypes> result = select("from AlcoholTypes");
+        List<AlcoholTypes> result = select("select Type from AlcoholTypes");
         return result;
     }
 
-    public List<Marks> getMarks()
+    public String getTypeByID(long ID)
     {
-        List<Marks> result = select("from Marks where UserID = 1");
-        return result;
+        List<AlcoholTypes> result = select("from AlcoholTypes where ID = " + ID + "");
+        return result.isEmpty() ? null : result.get(0).getType();
     }
 
-//    public static List<Alcohol> getNameAlcoByType() throws SQLException {
-//        List<Alcohol> alcohol = new ArrayList<>();
-//
-//        try {
-//            Query<Alcohol> query = session.createQuery("from database.Alcohol group by ID", Alcohol.class);
-//            alcohol = query.list();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        HibernateUtil.shutdown();
-//        return alcohol;
-//    }
-
+    public double getRating(long alcoholID)
+    {
+        List<Marks> result = select("from Marks where AlcoholID = '"+alcoholID+"'");
+        double rating = 0;
+        if (result.isEmpty()){
+            return 0;
+        }
+        for (var mark : result ){
+            rating += Integer.parseInt(mark.getMark());
+        }
+        rating /= result.size();
+        return  rating;
+    }
 }
-
 
 class HibernateUtil {
     private static SessionFactory sessionFactory;

@@ -1,9 +1,7 @@
 package database;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 
@@ -21,5 +19,4 @@ public class AlcoholTypes {
     @Setter
     @Column(name = "Type", length = 30, nullable = false)
     private String Type;
-
 }

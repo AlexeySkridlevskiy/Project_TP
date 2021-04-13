@@ -34,4 +34,14 @@ public class Alcohol {
     @Setter
     @Column(name = "Price", length = 10, nullable = false)
     private String Price;
+
+    @Transient
+    @Getter
+    @Setter
+    public double Rating;
+
+    @Transient
+    @Getter
+    @Setter
+    public String Type;
 }

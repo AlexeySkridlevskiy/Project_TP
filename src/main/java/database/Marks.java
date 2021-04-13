@@ -1,9 +1,7 @@
 package database;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 
@@ -20,7 +18,7 @@ public class Marks {
     @Getter
     @Setter
     @Column(name = "Mark", length = 15, nullable = false)
-    private String Mark;
+    private String Mark; //если Long, то происходит конфликт в MarksDao
 
     @Getter
     @Setter

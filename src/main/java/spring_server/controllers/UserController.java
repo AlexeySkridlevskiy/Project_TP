@@ -4,12 +4,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import database.*;
 
 @RestController
-@RequestMapping("user")
-public class UsersController {
-    @GetMapping("/{id}")
-    public User getUserById(@PathVariable long id){
+@RequestMapping("/user")
+class UserController {
+    HibernateRequest hibernateRequest = new HibernateRequest();
 
+    @GetMapping("/{id}")
+    public User getUserByID(@PathVariable long id) {
+        return hibernateRequest.getUserByID(id);
     }
 }

@@ -12,9 +12,7 @@
 .idea/**/dictionaries
 .idea/**/shelf
 .idea
-database.iml
-spring_server.iml
-Alco_Server.iml
+AlcoTopApp.iml
 target
 # Generated files
 .idea/**/contentModel.xml
